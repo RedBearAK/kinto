@@ -10,14 +10,14 @@ if [ "$sessiontype" == "wayland" ]; then
 	echo 
 	echo "  ==================================================== "
 	echo "  Seems like you may be running Wayland, not Xorg/X11. "
-	echo "  Kinto/xkeysnail doesn't work yet under Wayland."
+	echo "     Kinto/xkeysnail doesn't work yet under Wayland.   "
 	echo "  ==================================================== "
 	echo  
 elif ! [ "$sessiontype" == "x11" ]; then 
 	echo 
 	echo "  ==================================================== "
-	echo "  Make sure you're in an Xorg/X11 environment."
-	echo "  Kinto/xkeysnail doesn't work yet under Wayland."
+	echo "      Make sure you're in an Xorg/X11 environment.     "
+	echo "     Kinto/xkeysnail doesn't work yet under Wayland.  "
 	echo "  ==================================================== "
 	echo 
 elif [ "$sessiontype" == "x11" ]; then 
@@ -291,6 +291,13 @@ if ! [ -x "$(command -v pip3)" ]; then
 			echo "Found Manjaro KDE..."
 			echo 
 			echo "Will need to install python-pip..."
+			sudo ./linux/system-config/unipkg.sh "python-setuptools python-pip"
+		else 
+			echo 
+			echo "Found Manjaro"
+			echo 
+			echo "Will need to install pip wheel evdev setuptools"
+			sudo ./linux/system-config/unipkg.sh "python-evdev python-wheel"
 			sudo ./linux/system-config/unipkg.sh "python-setuptools python-pip"
 		fi
 	else
