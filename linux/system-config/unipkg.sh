@@ -6,7 +6,7 @@ if pkgmgr="$( which apt-get )" 2> /dev/null; then
    echo "Installing $1... "
    echo 
    $pkgmgr update
-   $pkgmgr --yes --allow-downgrades --allow-remove-essential --allow-change-held-packages install $1
+   $pkgmgr --yes install $1
 elif pkgmgr="$( which dnf )" 2> /dev/null; then
    echo 
    echo "dnf package manager detected... "
