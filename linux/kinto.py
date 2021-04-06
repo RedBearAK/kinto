@@ -9,6 +9,7 @@ from xkeysnail.transform import *
 # xbindkeys -mk
 terminals = [
     "alacritty",
+    "deepin-terminal",
     "eterm",
     "gnome-terminal",
     "guake",
@@ -246,21 +247,29 @@ define_keymap(re.compile("^jetbrains-(?!.*toolbox).*$", re.IGNORECASE),{
     # VCS/Local History
     K("Super-v"): K("M-Grave"),                 # VCS quick popup
     K("Super-c"): K("LC-c"),                    # Sigints - interrupt
-})
+},"Jetbrains")
 
-##########################################
-# START OF FILE MANAGER GROUP OF KEYMAPS #
-##########################################
+##############################################
+### START OF FILE MANAGER GROUP OF KEYMAPS ###
+##############################################
 
 # Keybindings overrides for Caja 
-# (overrides some bindings from general file browser code block below)
+# (overrides some bindings from general file manager code block below)
 define_keymap(re.compile("caja", re.IGNORECASE),{
     # K("RC-Super-o"): K("RC-Shift-Enter"),   # Open in new tab 
     K("RC-Super-o"): K("RC-Shift-W"),       # Open in new window
-},"Overrides_Caja")
+},"Overrides for Caja - Finder")
+
+# Keybindings overrides for DDE (Deepin) File Manager 
+# (overrides some bindings from general file manager code block below)
+define_keymap(re.compile("dde-file-manager", re.IGNORECASE),{
+    K("RC-i"): K("RC-i"),                # File properties dialog (Get Info)
+    K("RC-comma"): K("RC-comma"),       # Open preferences dialog (doesn't work, no shortcut available?)
+    K("RC-Up"): K("RC-Up"),                  # Go Up dir
+},"Overrides for DDE File Manager - Finder")
 
 # Keybindings overrides for Dolphin 
-# (overrides some bindings from general file browser code block below)
+# (overrides some bindings from general file manager code block below)
 define_keymap(re.compile("dolphin", re.IGNORECASE),{
     K("RC-Super-o"): K("RC-Shift-o"), # Open in new window (or new tab, user's choice)
     # "Open in new window" requires manually setting custom shortcut of Ctrl+Shift+o 
@@ -271,48 +280,49 @@ define_keymap(re.compile("dolphin", re.IGNORECASE),{
     ### 
     K("RC-Shift-N"): K("F10"),                  # Create new folder
     K("RC-comma"): K("RC-Shift-comma"),         # Open preferences dialog
-},"Overrides_Dolphin")
+},"Overrides for Dolphin - Finder")
 
 # Keybindings overrides for elementary OS Files 
-# (overrides some bindings from general file browser code block below)
+# (overrides some bindings from general file manager code block below)
 define_keymap(re.compile("io.elementary.files", re.IGNORECASE),{
     # K("RC-Super-o"): K("Shift-Enter"),          # Open folder in new tab
     K("RC-Comma"): None,                        # Disable preferences shortcut since none availabe
-},"Overrides_Pantheon")
+},"Overrides for Pantheon - Finder")
 
 # Keybindings overrides for Nautilus 
-# (overrides some bindings from general file browser code block below)
+# (overrides some bindings from general file manager code block below)
 define_keymap(re.compile("org.gnome.Nautilus", re.IGNORECASE),{
     K("RC-Super-o"): K("Shift-Enter"),           # Open in new window
     # K("RC-Super-o"): K("RC-Enter"),                 # Open in new tab
     K("RC-comma"): K("RC-comma"),                   # Overrides "Open preferences dialog" shortcut below
-},"Overrides_Nautilus")
+},"Overrides for Nautilus - Finder")
 
 # Keybindings overrides for PCManFM 
-# (overrides some bindings from general file browser code block below)
+# (overrides some bindings from general file manager code block below)
 define_keymap(re.compile("pcmanfm", re.IGNORECASE),{
     K("RC-Backspace"): [K("Delete"),K("Enter")],    # Move to Trash (delete, bypass dialog)
-},"Overrides_PCManFM")
+},"Overrides for PCManFM - Finder")
 
 # Keybindings overrides for SpaceFM
-# (overrides some bindings from general file browser code block below)
+# (overrides some bindings from general file manager code block below)
 define_keymap(re.compile("spacefm", re.IGNORECASE),{
     K("RC-Shift-N"): [K("RC-F")],	                # Create new folder is Ctrl+F by default
     K("RC-Backspace"): [K("Delete"),K("Enter")],	# Move to Trash (delete, bypass dialog)
     K("RC-comma"): [K("M-V"),K("p")],               # Overrides "Open preferences dialog" shortcut below
     # This shortcut ^^^^^^^^^^^^^^^ is not fully working in SpaceFM. Opens "View" menu but not Preferences. 
     # SpaceFM seems to be doing some nasty binding that blocks things like Alt+Tab while the menu is open. 
-},"Overrides_SpaceFM")
+},"Overrides for SpaceFM - Finder")
 
 # Keybindings overrides for Thunar 
-# (overrides some bindings from general file browser code block below)
+# (overrides some bindings from general file manager code block below)
 define_keymap(re.compile("thunar", re.IGNORECASE),{
     K("RC-Super-o"): K("RC-Shift-P"),          # Open in new tab
     K("RC-comma"): [K("M-E"),K("E")],          # Overrides "Open preferences dialog" shortcut below
-},"Overrides_Thunar")
+},"Overrides for Thunar - Finder")
 
 filemanagers = [
     "caja",
+    "dde-file-manager",
     "dolphin",
     "io.elementary.files",
     "nemo",
@@ -325,41 +335,53 @@ filemanagers = [
 filemanagers = [filemanager.casefold() for filemanager in filemanagers]
 filemanagerStr = "|".join(str(x) for x in filemanagers)
 
-# Keybindings for general file browsers group: 
+# Currently supported Linux file managers (file browsers): 
 # 
 # Caja File Browser (MATE file manager, fork of Nautilus)
+# DDE File Manager (Deepin Linux file manager)
 # Dolphin (KDE file manager)
-# Nautilus (GNOME file manager, may be called "Files")
-# Nemo (Cinnamon file manager, fork of Nautilus, may be called "Files")
-# Pantheon Files (elementary OS file manager, may be called "Files")
+# Nautilus (GNOME file manager, may be named "Files")
+# Nemo (Cinnamon file manager, fork of Nautilus, may be named "Files")
+# Pantheon Files (elementary OS file manager, may be named "Files")
 # PCManFM (LXDE file manager)
 # PCManFM-Qt (LXQt file manager)
 # SpaceFM (Fork of PCManFM file manager)
 # Thunar File Manager (Xfce file manager)
 # 
+# Keybindings for general Linux file managers group: 
 define_keymap(re.compile(filemanagerStr, re.IGNORECASE),{
+    ###########################################################################################################
+    ###  Show Properties (Get Info) | Open Settings/Preferences | Show/Hide hidden files                    ###
+    ###########################################################################################################
     K("RC-i"): K("M-Enter"),                # File properties dialog (Get Info)
     K("RC-comma"): [K("M-E"),K("N")],       # Open preferences dialog
-    K("RC-Up"): K("M-Up"),                  # Go Up dir
-    # K("RC-Down"): K("M-Down"),            # Go Down dir (only works on folders)
-    # K("RC-Down"): K("RC-O"),              # Go Down dir (open folder/file)
-    K("RC-Down"): K("Enter"),               # Go Down dir (open folder/file)
-    # K("RC-Shift-Down"): K("RC-Shift-o"),  # Open in new window (doesn't match Finder)
-    K("RC-Super-o"): K("RC-Shift-o"),       # Open in new window
+    K("RC-Shift-dot"): K("RC-H"),           # Show/hide hidden files ("dot" files)
+    ###########################################################################################################
+    ###  Navigation                                                                                         ###
+    ###########################################################################################################
     K("RC-Left"): K("M-Left"),              # Go Back
     K("RC-Right"): K("M-Right"),            # Go Forward
-    # To enable renaming files with the Enter key, uncomment the two lines just below. 
-    # Use Ctrl+Shift+Enter to escape or activate text fields. 
-    # K("Enter"): K("F2"),				    # Rename with Enter key
-    # K("RC-Shift-Enter"): K("Enter"),	    # Remap alternative "Enter" key to easily activate/exit text fields
-    K("RC-Shift-dot"): K("RC-H"),           # Show/hide hidden files ("dot" files)
+    K("RC-Up"): K("M-Up"),                  # Go Up dir
+    # K("RC-Down"): K("M-Down"),            # Go Down dir (only works on folders) [not universal]
+    # K("RC-Down"): K("RC-O"),              # Go Down dir (open folder/file) [not universal]
+    K("RC-Down"): K("Enter"),               # Go Down dir (open folder/file) [universal]
+    ###########################################################################################################
+    ###  Open in New Window | Move to Trash | Duplicate file/folder                                         ###
+    ###########################################################################################################
+    K("RC-Super-o"): K("RC-Shift-o"),       # Open in new window (or tab, depends on FM setup) [not universal]
     K("RC-Backspace"): K("Delete"),	        # Move to Trash (delete)
     K("RC-D"): [K("RC-C"),K("RC-V")],       # Mimic Finder's Duplicate command (Copy, then Paste)
-},"File_Managers")
+    ###########################################################################################################
+    ###  To enable renaming files with the Enter key, uncomment the two keymapping lines just below this.   ###
+    ###  Use Ctrl+Shift+Enter to escape or activate text fields such as "[F]ind" and "[L]ocation" fields.   ###
+    ###########################################################################################################
+    # K("Enter"): K("F2"),				    # Rename with Enter key
+    # K("RC-Shift-Enter"): K("Enter"),	    # Remap alternative "Enter" key to easily activate/exit text fields
+},"File Managers - Finder")
 
-########################################
-# END OF FILE MANAGER GROUP OF KEYMAPS #
-########################################
+############################################
+### END OF FILE MANAGER GROUP OF KEYMAPS ###
+############################################
 
 # Keybindings for Browsers
 define_keymap(re.compile(browserStr, re.IGNORECASE),{
@@ -389,24 +411,18 @@ define_keymap(re.compile("Firefox", re.IGNORECASE),{
 })
 define_keymap(re.compile(chromeStr, re.IGNORECASE),{
     K("C-comma"): [K("M-e"), K("s"),K("Enter")],
-})
+}, "Browsers")
 # Opera C-F12
 
-################################################################
-################################################################
-# THIS BLOCK IS TO BE REMOVED AFTER FIGURING OUT WHY GUI MAPPING 
-# IN NEXT BLOCK IS OVERRIDING TERMINAL MAPPING FOR SAME SHORTCUT
-define_keymap(re.compile(termStr, re.IGNORECASE),{
-    K("RC-Dot"): K("LC-c"),                         # Map Ctrl+Dot to Ctrl+C in terminals
-}, "Mapping Ctrl+Dot to Ctrl+C in terminals")
-################################################################
-################################################################
+# Note: terminals extends to remotes as well
+define_keymap(lambda wm_class: wm_class.casefold() not in terminals,{
+    K("RC-Dot"): K("Esc"),                        # Mimic macOS Cmd+dot = Escape key (not in terminals)
+})
 
 # None referenced here originally
 # - but remote clients and VM software ought to be set here
 # These are the typical remaps for ALL GUI based apps
 define_keymap(lambda wm_class: wm_class.casefold() not in remotes,{
-    K("RC-Dot"): K("Esc"),                          # Mimic macOS Cmd+dot = Escape key (not in terminals)
     K("RC-Space"): K("Alt-F1"),                   # Default SL - Launch Application Menu (gnome/kde)
     K("RC-F3"):K("Super-d"),                      # Default SL - Show Desktop (gnome/kde,eos)
     K("RC-Super-f"):K("M-F10"),                      # Default SL - Maximize app (gnome/kde)
@@ -482,7 +498,7 @@ define_keymap(lambda wm_class: wm_class.casefold() not in remotes,{
     K("Alt-Delete"): K("C-Delete"),               # Delete Right Word of Cursor
     # K(""): pass_through_key,                      # cancel
     # K(""): K(""),                                 #
-})
+}, "General GUI")
 
 define_keymap(lambda wm_class: wm_class.casefold() not in mscodes,{
     # Wordwise remaining - for Everything but VS Code
@@ -505,7 +521,7 @@ define_keymap(lambda wm_class: wm_class.casefold() not in mscodes,{
     #   https://superuser.com/questions/770301/pentadactyl-how-to-disable-menu-bar-toggle-by-alt
     # **
     #
-})
+}, "Wordwise - not vscode")
 
 # Keybindings for VS Code
 define_keymap(re.compile(codeStr, re.IGNORECASE),{
@@ -690,7 +706,6 @@ define_keymap(re.compile(termStr, re.IGNORECASE),{
     K("RC-N"): K("C-Shift-N"),
     K("RC-M"): K("C-Shift-M"),
     K("RC-COMMA"): K("C-Shift-COMMA"),
-    # K("RC-DOT"): K("C-Shift-DOT"),
     K("RC-Dot"): K("LC-c"),
     K("RC-SLASH"): K("C-Shift-SLASH"),
     K("RC-KPASTERISK"): K("C-Shift-KPASTERISK"),
