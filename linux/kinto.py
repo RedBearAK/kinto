@@ -18,26 +18,36 @@ terminals = [
     "kinto-gui.py",
     "kitty",
     "konsole",
+    "lxterminal",
     "mate-terminal",
     "qterminal",
+    "st",
     "sakura",
+    "station",
     "terminator",
+    "termite",
     "tilda",
     "tilix",
+    "urxvt",
     "xfce4-terminal",
     "xterm",
 ]
 terminals = [term.casefold() for term in terminals]
-termStr = "|".join(str(x) for x in terminals)
+termStr = "|".join(str('^'+x+'$') for x in terminals)
 
 mscodes = ["code","vscodium"]
-codeStr = "|".join(str(x) for x in mscodes)
+codeStr = "|".join(str('^'+x+'$') for x in mscodes)
 
 # Add remote desktop clients & VM software here
 # Ideally we'd only exclude the client window,
 # but that may not be easily done.
 remotes = [
+    "Gnome-boxes",
     "org.remmina.Remmina",
+    "qemu-system-.*",
+    "Virt-manager",
+    "VirtualBox",
+    "VirtualBox Machine",
     "xfreerdp",
 ]
 remotes = [client.casefold() for client in remotes]
@@ -58,7 +68,7 @@ browsers = [
     "microsoft-edge-dev",
 ]
 browsers = [browser.casefold() for browser in browsers]
-browserStr = "|".join(str(x) for x in browsers)
+browserStr = "|".join(str('^'+x+'$') for x in browsers)
 
 chromes = [
     "Chromium",
@@ -68,11 +78,11 @@ chromes = [
     "microsoft-edge-dev",
 ]
 chromes = [chrome.casefold() for chrome in chromes]
-chromeStr = "|".join(str(x) for x in chromes)
+chromeStr = "|".join(str('^'+x+'$') for x in chromes)
 
 # edges = ["microsoft-edge-dev","microsoft-edge"]
 # edges = [edge.casefold() for edge in edges]
-# edgeStr = "|".join(str(x) for x in edges)
+# edgeStr = "|".join(str('^'+x+'$') for x in edges)
 
 define_multipurpose_modmap(
     # {Key.ENTER: [Key.ENTER, Key.RIGHT_CTRL]   # Enter2Cmd
@@ -131,7 +141,7 @@ define_conditional_modmap(re.compile(termStr, re.IGNORECASE), {
     # Key.RIGHT_ALT: Key.RIGHT_CTRL,    # IBM - Multi-language (Remove)
     # Key.RIGHT_CTRL: Key.RIGHT_ALT,    # IBM
     # # Right Meta does not exist on chromebooks
-    
+
     # Key.RIGHT_ALT: Key.RIGHT_CTRL,  # IBM - Multi-language (Remove)
     # Key.RIGHT_CTRL: Key.RIGHT_ALT,  # IBM - Multi-language (Remove)
 
@@ -213,8 +223,7 @@ define_keymap(re.compile("^jetbrains-(?!.*toolbox).*$", re.IGNORECASE),{
     K("C-M-o"): K("C-M-Shift-n"),               # Go to symbol
     K("Super-Right"): K("M-Right"),             # Go to next editor tab
     K("Super-Left"): K("M-Left"),               # Go to previous editor tab
-    K("Super-l"): K("C-g"),                     # Go to line
-    K("Super-e"): K("C-e"),                     # Recent files popup
+    K("C-l"): K("C-g"),                         # Go to line
     K("M-Space"): K("C-Shift-i"),               # Open quick definition lookup
     K("C-Y"): K("C-Shift-i"),                   # Open quick definition lookup
     K("Super-Shift-b"): K("C-Shift-b"),         # Go to type declaration
@@ -253,53 +262,54 @@ define_keymap(re.compile("^jetbrains-(?!.*toolbox).*$", re.IGNORECASE),{
 ### START OF FILE MANAGER GROUP OF KEYMAPS ###
 ##############################################
 
-# Keybindings overrides for Caja 
+# Keybindings overrides for Caja
 # (overrides some bindings from general file manager code block below)
 define_keymap(re.compile("caja", re.IGNORECASE),{
-    # K("RC-Super-o"): K("RC-Shift-Enter"),   # Open in new tab 
-    K("RC-Super-o"): K("RC-Shift-W"),       # Open in new window
+    # K("RC-Super-o"): K("RC-Shift-Enter"),       # Open in new tab
+    K("RC-Super-o"): K("RC-Shift-W"),           # Open in new window
 },"Overrides for Caja - Finder")
 
-# Keybindings overrides for DDE (Deepin) File Manager 
+# Keybindings overrides for DDE (Deepin) File Manager
 # (overrides some bindings from general file manager code block below)
 define_keymap(re.compile("dde-file-manager", re.IGNORECASE),{
-    K("RC-i"): K("RC-i"),                # File properties dialog (Get Info)
-    K("RC-comma"): K("RC-comma"),       # Open preferences dialog (doesn't work, no shortcut available?)
-    K("RC-Up"): K("RC-Up"),                  # Go Up dir
+    K("RC-i"): K("RC-i"),                   # File properties dialog (Get Info)
+    K("RC-comma"): None,                    # Disable preferences shortcut (no shortcut available)
+    K("RC-Up"): K("RC-Up"),                 # Go Up dir
 },"Overrides for DDE File Manager - Finder")
 
-# Keybindings overrides for Dolphin 
+# Keybindings overrides for Dolphin
 # (overrides some bindings from general file manager code block below)
 define_keymap(re.compile("dolphin", re.IGNORECASE),{
-    K("RC-Super-o"): K("RC-Shift-o"), # Open in new window (or new tab, user's choice)
-    # "Open in new window" requires manually setting custom shortcut of Ctrl+Shift+o 
-    # in Dolphin's keyboard shortcuts. There is no default shortcut set for this function.
-    ### 
-    # "Open in new tab" requires manually setting custom shortcut of Ctrl+Shift+o in 
-    # Dolphin's keyboard shortcuts. There is no default shortcut set for this function. 
-    ### 
+    ##########################################################################################
+    ### "Open in new window" requires manually setting custom shortcut of Ctrl+Shift+o
+    ### in Dolphin's keyboard shortcuts. There is no default shortcut set for this function.
+    ##########################################################################################
+    ### "Open in new tab" requires manually setting custom shortcut of Ctrl+Shift+o in
+    ### Dolphin's keyboard shortcuts. There is no default shortcut set for this function.
+    ##########################################################################################
+    K("RC-Super-o"): K("RC-Shift-o"),           # Open in new window (or new tab, user's choice, see above)
     K("RC-Shift-N"): K("F10"),                  # Create new folder
     K("RC-comma"): K("RC-Shift-comma"),         # Open preferences dialog
 },"Overrides for Dolphin - Finder")
 
-# Keybindings overrides for elementary OS Files 
+# Keybindings overrides for elementary OS Files
 # (overrides some bindings from general file manager code block below)
 define_keymap(re.compile("io.elementary.files", re.IGNORECASE),{
     # K("RC-Super-o"): K("Shift-Enter"),          # Open folder in new tab
-    K("RC-Comma"): None,                        # Disable preferences shortcut since none availabe
+    K("RC-Comma"): None,                        # Disable preferences shortcut since none available
 },"Overrides for Pantheon - Finder")
 
-# Keybindings overrides for Nautilus 
+# Keybindings overrides for Nautilus
 # (overrides some bindings from general file manager code block below)
-define_keymap(re.compile("org.gnome.Nautilus", re.IGNORECASE),{
-    K("RC-Super-o"): K("Shift-Enter"),           # Open in new window
-    # K("RC-Super-o"): K("RC-Enter"),                 # Open in new tab
-    K("RC-comma"): K("RC-comma"),                   # Overrides "Open preferences dialog" shortcut below
+define_keymap(re.compile("org.gnome.nautilus|nautilus", re.IGNORECASE),{
+    K("RC-Super-o"): K("Shift-Enter"),          # Open in new window
+    # K("RC-Super-o"): K("RC-Enter"),             # Open in new tab
+    K("RC-comma"): K("RC-comma"),               # Overrides "Open preferences dialog" shortcut below
 },"Overrides for Nautilus - Finder")
 
-# Keybindings overrides for PCManFM 
+# Keybindings overrides for PCManFM and PCManFM-Qt
 # (overrides some bindings from general file manager code block below)
-define_keymap(re.compile("pcmanfm", re.IGNORECASE),{
+define_keymap(re.compile("pcmanfm|pcmanfm-qt", re.IGNORECASE),{
     K("RC-Backspace"): [K("Delete"),K("Enter")],    # Move to Trash (delete, bypass dialog)
 },"Overrides for PCManFM - Finder")
 
@@ -309,11 +319,11 @@ define_keymap(re.compile("spacefm", re.IGNORECASE),{
     K("RC-Shift-N"): [K("RC-F")],	                # Create new folder is Ctrl+F by default
     K("RC-Backspace"): [K("Delete"),K("Enter")],	# Move to Trash (delete, bypass dialog)
     K("RC-comma"): [K("M-V"),K("p")],               # Overrides "Open preferences dialog" shortcut below
-    # This shortcut ^^^^^^^^^^^^^^^ is not fully working in SpaceFM. Opens "View" menu but not Preferences. 
-    # SpaceFM seems to be doing some nasty binding that blocks things like Alt+Tab while the menu is open. 
+    # This shortcut ^^^^^^^^^^^^^^^ is not fully working in SpaceFM. Opens "View" menu but not Preferences.
+    # SpaceFM seems to be doing some nasty binding that blocks things like Alt+Tab while the menu is open.
 },"Overrides for SpaceFM - Finder")
 
-# Keybindings overrides for Thunar 
+# Keybindings overrides for Thunar
 # (overrides some bindings from general file manager code block below)
 define_keymap(re.compile("thunar", re.IGNORECASE),{
     K("RC-Super-o"): K("RC-Shift-P"),          # Open in new tab
@@ -325,18 +335,19 @@ filemanagers = [
     "dde-file-manager",
     "dolphin",
     "io.elementary.files",
+    "nautilus",
     "nemo",
-    "org.gnome.Nautilus",
+    "org.gnome.nautilus",
     "pcmanfm",
     "pcmanfm-qt",
     "spacefm",
     "thunar",
 ]
 filemanagers = [filemanager.casefold() for filemanager in filemanagers]
-filemanagerStr = "|".join(str(x) for x in filemanagers)
+filemanagerStr = "|".join(str('^'+x+'$') for x in filemanagers)
 
-# Currently supported Linux file managers (file browsers): 
-# 
+# Currently supported Linux file managers (file browsers):
+#
 # Caja File Browser (MATE file manager, fork of Nautilus)
 # DDE File Manager (Deepin Linux file manager)
 # Dolphin (KDE file manager)
@@ -347,8 +358,8 @@ filemanagerStr = "|".join(str(x) for x in filemanagers)
 # PCManFM-Qt (LXQt file manager)
 # SpaceFM (Fork of PCManFM file manager)
 # Thunar File Manager (Xfce file manager)
-# 
-# Keybindings for general Linux file managers group: 
+#
+# Keybindings for general Linux file managers group:
 define_keymap(re.compile(filemanagerStr, re.IGNORECASE),{
     ###########################################################################################################
     ###  Show Properties (Get Info) | Open Settings/Preferences | Show/Hide hidden files                    ###
@@ -362,8 +373,8 @@ define_keymap(re.compile(filemanagerStr, re.IGNORECASE),{
     K("RC-Left"): K("M-Left"),              # Go Back
     K("RC-Right"): K("M-Right"),            # Go Forward
     K("RC-Up"): K("M-Up"),                  # Go Up dir
-    # K("RC-Down"): K("M-Down"),            # Go Down dir (only works on folders) [not universal]
-    # K("RC-Down"): K("RC-O"),              # Go Down dir (open folder/file) [not universal]
+    # K("RC-Down"): K("M-Down"),              # Go Down dir (only works on folders) [not universal]
+    # K("RC-Down"): K("RC-O"),                # Go Down dir (open folder/file) [not universal]
     K("RC-Down"): K("Enter"),               # Go Down dir (open folder/file) [universal]
     ###########################################################################################################
     ###  Open in New Window | Move to Trash | Duplicate file/folder                                         ###
@@ -375,8 +386,8 @@ define_keymap(re.compile(filemanagerStr, re.IGNORECASE),{
     ###  To enable renaming files with the Enter key, uncomment the two keymapping lines just below this.   ###
     ###  Use Ctrl+Shift+Enter to escape or activate text fields such as "[F]ind" and "[L]ocation" fields.   ###
     ###########################################################################################################
-    # K("Enter"): K("F2"),				    # Rename with Enter key
-    # K("RC-Shift-Enter"): K("Enter"),	    # Remap alternative "Enter" key to easily activate/exit text fields
+    # K("Enter"): K("F2"),                    # Rename with Enter key
+    # K("RC-Shift-Enter"): K("Enter"),        # Remap alternative "Enter" key to easily activate/exit text fields
 },"File Managers - Finder")
 
 ############################################
@@ -425,16 +436,18 @@ define_keymap(lambda wm_class: wm_class.casefold() not in terminals,{
 define_keymap(lambda wm_class: wm_class.casefold() not in remotes,{
     K("RC-Space"): K("Alt-F1"),                   # Default SL - Launch Application Menu (gnome/kde)
     K("RC-F3"):K("Super-d"),                      # Default SL - Show Desktop (gnome/kde,eos)
-    K("RC-Super-f"):K("M-F10"),                      # Default SL - Maximize app (gnome/kde)
+    K("RC-Super-f"):K("M-F10"),                   # Default SL - Maximize app (gnome/kde)
     # K("Super-Right"):K("C-M-Right"),              # Default SL - Change workspace (budgie)
     # K("Super-Left"):K("C-M-Left"),                # Default SL - Change workspace (budgie)
     K("RC-Q"): K("M-F4"),                         # Default SL - not-popos
     K("RC-H"):K("Super-h"),                       # Default SL - Minimize app (gnome/budgie/popos/fedora)
-    K("M-Tab"): pass_through_key,                 # Default not-xfce4 - Cmd Tab - App Switching Default
-    K("RC-Tab"): K("M-Tab"),                      # Default not-xfce4 - Cmd Tab - App Switching Default
-    K("RC-Shift-Tab"): K("M-Shift-Tab"),          # Default not-xfce4 - Cmd Tab - App Switching Default
+    K("M-Tab"): pass_through_key,                 # Default - Cmd Tab - App Switching Default
+    K("RC-Tab"): K("M-Tab"),                      # Default - Cmd Tab - App Switching Default
+    K("RC-Shift-Tab"): K("M-Shift-Tab"),          # Default - Cmd Tab - App Switching Default
     K("RC-Grave"): K("M-Grave"),                  # Default not-xfce4 - Cmd ` - Same App Switching
     K("RC-Shift-Grave"): K("M-Shift-Grave"),      # Default not-xfce4 - Cmd ` - Same App Switching
+    # K("RC-Grave"): K("Super-Tab"),                # xfce4 Switch within app group
+    # K("RC-Shift-Grave"): K("Super-Shift-Tab"),    # xfce4 Switch within app group
     # K("Super-Right"):K("Super-Page_Up"),          # SL - Change workspace (ubuntu/fedora)
     # K("Super-Left"):K("Super-Page_Down"),         # SL - Change workspace (ubuntu/fedora)
     # K("Super-Right"):K("Super-C-Up"),             # SL - Change workspace (popos)
@@ -450,10 +463,6 @@ define_keymap(lambda wm_class: wm_class.casefold() not in remotes,{
     # Basic App hotkey functions
     # K("RC-H"):K("M-F9"),                          # SL - Minimize app xfce4
     # K("RC-LC-f"):K("Super-PAGE_DOWN"),            # SL - Minimize app manjaro
-    # Cmd Tab - App Switching Default
-    # K("RC-Tab"): K("RC-backslash"),               # xfce4
-    # K("RC-Shift-Tab"): K("RC-Shift-backslash"),   # xfce4
-    # K("RC-Grave"): K("RC-Shift-backslash"),       # xfce4
     # In-App Tab switching
     # K("M-Tab"): K("C-Tab"),                       # Chromebook/IBM - In-App Tab switching
     # K("M-Shift-Tab"): K("C-Shift-Tab"),           # Chromebook/IBM - In-App Tab switching
@@ -463,7 +472,7 @@ define_keymap(lambda wm_class: wm_class.casefold() not in remotes,{
 
     # Fn to Alt style remaps
     K("RM-Enter"): K("insert"),                   # Insert
-    
+
     # emacs style
     K("Super-a"): K("Home"),                      # Beginning of Line
     K("Super-e"): K("End"),                       # End of Line
@@ -474,7 +483,7 @@ define_keymap(lambda wm_class: wm_class.casefold() not in remotes,{
     K("Super-k"): [K("Shift-End"), K("Backspace")],
     K("Super-d"): K("Delete"),
 
-    # K("M-RC-Space"): K(""),                   # Open Finder - Placeholder
+    # K("M-RC-Space"): K(""),                       # Open Finder - Placeholder
 
     # Wordwise
     K("RC-Left"): K("Home"),                      # Beginning of Line
@@ -532,7 +541,7 @@ define_keymap(re.compile(codeStr, re.IGNORECASE),{
     K("M-Right"): [K("M-F19"),K("C-Right")],                # Right of Word
     K("M-Shift-Left"): [K("M-F19"),K("C-Shift-Left")],      # Select Left of Word
     K("M-Shift-Right"): [K("M-F19"),K("C-Shift-Right")],    # Select Right of Word
-    
+
     # K("C-PAGE_DOWN"): pass_through_key,         # cancel next_view
     # K("C-PAGE_UP"): pass_through_key,           # cancel prev_view
     K("C-M-Left"): K("C-PAGE_UP"),              # next_view
@@ -649,11 +658,14 @@ define_keymap(re.compile("Io.elementary.terminal|kitty", re.IGNORECASE),{
 }, "Elementary Terminal tab switching")
 
 define_keymap(re.compile(termStr, re.IGNORECASE),{
+    K("LC-RC-f"): K("M-F10"),                       # Toggle window maximized state
+    # K("RC-Grave"): K("Super-Tab"),                # xfce4 Switch within app group
+    # K("RC-Shift-Grave"): K("Super-Shift-Tab"),    # xfce4 Switch within app group
     # K("LC-Right"):K("C-M-Right"),                 # Default SL - Change workspace (budgie)
     # K("LC-Left"):K("C-M-Left"),                   # Default SL - Change workspace (budgie)
-    # K("LC-Left"):K("C-M-End"),                    # SL - Change workspace xfce4     
-    # K("LC-Left"):K("Super-Left"),                 # SL - Change workspace eos 
-    # K("LC-Right"):K("C-M-Home"),                  # SL - Change workspace xfce4     
+    # K("LC-Left"):K("C-M-End"),                    # SL - Change workspace xfce4
+    # K("LC-Left"):K("Super-Left"),                 # SL - Change workspace eos
+    # K("LC-Right"):K("C-M-Home"),                  # SL - Change workspace xfce4
     # K("LC-Right"):K("Super-Right"),               # SL - Change workspace eos
     # K("LC-Right"):K("Super-Page_Up"),             # SL - Change workspace (ubuntu/fedora)
     # K("LC-Left"):K("Super-Page_Down"),            # SL - Change workspace (ubuntu/fedora)
@@ -663,15 +675,11 @@ define_keymap(re.compile(termStr, re.IGNORECASE),{
     K("LC-Tab") : K("LC-PAGE_DOWN"),
     K("LC-Shift-Tab") : K("LC-PAGE_UP"),
     K("LC-Grave") : K("LC-PAGE_UP"),
-    # K("M-Tab"): pass_through_key,                 # Default not-xfce4 - Cmd Tab - App Switching Default
-    # K("RC-Tab"): K("M-Tab"),                      # Default not-xfce4 - Cmd Tab - App Switching Default
-    # K("RC-Shift-Tab"): K("M-Shift-Tab"),          # Default not-xfce4 - Cmd Tab - App Switching Default
-    # Cmd Tab - App Switching Default
-    # K("RC-Tab"): K("RC-backslash"),               # xfce4
-    # K("RC-Shift-Tab"): K("RC-Shift-backslash"),   # xfce4
-    # K("RC-Grave"): K("RC-Shift-backslash"),       # xfce4
+    # K("M-Tab"): pass_through_key,                 # Default - Cmd Tab - App Switching Default
+    # K("RC-Tab"): K("M-Tab"),                      # Default - Cmd Tab - App Switching Default
+    # K("RC-Shift-Tab"): K("M-Shift-Tab"),          # Default - Cmd Tab - App Switching Default
     # Converts Cmd to use Ctrl-Shift
-    K("RC-MINUS"): K("C-Shift-MINUS"),
+    K("RC-MINUS"): K("C-MINUS"),
     K("RC-EQUAL"): K("C-Shift-EQUAL"),
     K("RC-BACKSPACE"): K("C-Shift-BACKSPACE"),
     K("RC-W"): K("C-Shift-W"),
@@ -697,7 +705,6 @@ define_keymap(re.compile(termStr, re.IGNORECASE),{
     K("RC-SEMICOLON"): K("C-Shift-SEMICOLON"),
     K("RC-APOSTROPHE"): K("C-Shift-APOSTROPHE"),
     K("RC-GRAVE"): K("C-Shift-GRAVE"),
-    K("RC-BACKSLASH"): K("C-Shift-BACKSLASH"),
     K("RC-Z"): K("C-Shift-Z"),
     K("RC-X"): K("C-Shift-X"),
     K("RC-C"): K("C-Shift-C"),

@@ -13,6 +13,10 @@ v1.2 Release - Kinto now includes a system tray and simple wizard to setup the i
 
 Kinto is powered by [xkeysnail](https://github.com/mooz/xkeysnail) for Linux & by [Autohotkey](https://github.com/Lexikos/AutoHotkey_L) for Windows 10.
 
+Note: If you plan to remote into Linux via VNC, xRDP, Synergy or other remote desktop solutions then remove the current release, or create a new user, & try an earlier [v1.0.7-3](https://github.com/rbreaves/kinto/releases/tag/1.0.7-3) release. It uses xkb so it'll work with virtual xinput devices. Some v1.1-x releases may offer both, but all v1.2.x releases ended support for xkb. I do plan to bring offical support back for virtual input devices.
+
+Additionally VMware, Virtualbox, KVM and other virtualization technologies work best with the current release - so *this note only applies to remote desktop into Linux* - not virtualization.
+
 ### [Table of Contents ](#Table-of-Contents)
 
 ## Donations
@@ -36,12 +40,12 @@ Video Tutorial: [Install Kinto.sh for Linux in less than a minute](https://www.y
 
 Paste the following into your Terminal
 ```
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/rbreaves/kinto/HEAD/install/linux.sh)"
+/bin/bash -c "$(wget -qO- https://raw.githubusercontent.com/rbreaves/kinto/HEAD/install/linux.sh || curl -fsSL https://raw.githubusercontent.com/rbreaves/kinto/HEAD/install/linux.sh)"
 ```
 
 Uninstall
 ```
-/bin/bash <( curl https://raw.githubusercontent.com/rbreaves/kinto/HEAD/install/linux.sh ) -r
+/bin/bash <( wget -qO- https://raw.githubusercontent.com/rbreaves/kinto/HEAD/install/linux.sh || curl -fsSL https://raw.githubusercontent.com/rbreaves/kinto/HEAD/install/linux.sh ) -r
 ```
 
 ### Old Install Method
@@ -76,7 +80,7 @@ Try toggling numlock on & off (clear key on official mac keyboards). If it still
 If you want a global menu app similar to what mac users have then I strongly recommend Ubuntu Budgie as it has the Vala Appmenu built in and ready for activation. Short of that Vala-AppMenu can be installed in various distros, mileage will vary. If you try to activate it in the latest 20.xx releases with XFCE then you may need to run the following commands.
 
 ```
-sudo apt install xfce4-appmenu-plugin vala-panel-appmenu-common
+sudo apt install xfce4-appmenu-plugin vala-panel-appmenu-common appmenu-gtk2-module appmenu-gtk3-module appmenu-gtk-module-common
 xfconf-query -c xsettings -p /Gtk/Modules -n -t string -s "appmenu-gtk-module"
 ```
 
@@ -140,6 +144,7 @@ RDP fully works as long as the entire keyboard input is being captured. RDP had 
 
 |Program|Src/Remote Client ⇒|Dst/Remote Server|Works? |Notes|
 |---|---|---|---|---|
+|Official MS RDP (mstsc.exe)| ❖Windows ⇒| 🐧Linux  | ✅ Yes| Note: [v1.0.7-3 Only](https://github.com/rbreaves/kinto/releases/tag/1.0.7-3). Should work for xRDP/VNC and other remote server protocols.  |
 |Official MS RDP (mstsc.exe)| ❖Windows ⇒| ❖Windows  | ✅ Yes|   |
 |Official MS RDP| ChromeOS 87+⇒| ❖Windows  | ✅ Yes|May work on earlier versions as well, if they support Android apps|
 |Remmina| 🐧Linux*/ChromeOS 87+⇒| ❖Windows  | ✅ Yes|*Use hover menu to enable "Grab all keyboard events"|
@@ -252,7 +257,7 @@ Additionally, if you are using a cross-platform app and if it happens to have a 
 ## What does Kinto require?
 
 - Python
-- systemd
+- systemd or sysvinit
 - x11
 - xkeysnail
 
@@ -310,8 +315,14 @@ In the above example I am also showing that you can define a single shortcut to 
 
 You can also make changes to the file in your /tmp/kinto/xkeysnail/kinto.py location and see them take affect in real time, but for your changes to be permanent you will need to make your changes in the ~/.config/kinto/kinto.py location & restart the xkeysnail service.
 
+systemd
 ```
 sudo systemctl restart xkeysnail
+```
+
+sysvinit
+```
+sudo -E /etc/init.d/kinto restart
 ```
 
 More information can be seen on the readme page of [xkeysnail](https://github.com/mooz/xkeysnail).
@@ -375,23 +386,51 @@ git pull origin master
 This info is now superceded by the fact that linux has a full fledge GUI and system tray app that is very easy to use, but I will keep the command line options for those that want to know what they are.
 
 Status
+
+systemd
 ```
 sudo systemctl status xkeysnail
 ```
 
+sysvinit
+```
+tail -f /tmp/kinto.log
+```
+
 Stop (your keymap will return to normal)
+
+systemd
 ```
 sudo systemctl stop xkeysnail
 ```
 
+sysvinit
+```
+sudo -E /etc/init.d/kinto stop
+```
+
 Start
+
+systemd
 ```
 sudo systemctl start xkeysnail
 ```
 
+sysvinit
+```
+sudo -E /etc/init.d/kinto start
+```
+
 Restart
+
+systemd
 ```
 sudo systemctl restart xkeysnail
+```
+
+sysvinit
+```
+sudo -E /etc/init.d/kinto restart
 ```
 
 ## Troubleshooting
